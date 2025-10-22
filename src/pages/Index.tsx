@@ -242,12 +242,12 @@ const hello = "world";
         <div className="flex-1 flex relative">
           {/* Edit View */}
           {(viewMode === "edit" || viewMode === "split") && (
-            <div className={`${viewMode === "split" ? "w-1/2" : "w-full"} flex flex-col border-r border-gray-800`}>
+            <div className={`${viewMode === "split" ? "w-1/2" : "w-full"} flex flex-col border-r border-gray-300`}>
               <textarea
                 ref={textareaRef}
                 value={markdown}
                 onChange={(e) => setMarkdown(e.target.value)}
-                className="flex-1 bg-[#1f2326] text-gray-300 p-6 outline-none resize-none font-mono text-sm leading-relaxed"
+                className="flex-1 bg-white text-gray-900 p-6 outline-none resize-none font-mono text-sm leading-relaxed"
                 placeholder="Start writing..."
               />
             </div>
@@ -255,8 +255,8 @@ const hello = "world";
 
           {/* Preview View */}
           {(viewMode === "preview" || viewMode === "split") && (
-            <div className={`${viewMode === "split" ? "w-1/2" : "w-full"} overflow-auto`}>
-              <div className="p-6 prose prose-invert prose-slate max-w-none">
+            <div className={`${viewMode === "split" ? "w-1/2" : "w-full"} overflow-auto bg-white`}>
+              <div className="p-6 prose prose-slate max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {markdown}
                 </ReactMarkdown>
