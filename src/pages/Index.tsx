@@ -112,12 +112,14 @@ const hello = "world";
               className="w-full bg-transparent text-xl font-semibold text-gray-200 outline-none placeholder-gray-600 mb-3"
             />
             
-            {/* Folder, Status, and Tags */}
+            {/* Note Metadata Section: Folder, Status, and Tags */}
             <div className="flex items-center gap-3 flex-wrap">
+              {/* Left Section: Checkbox and Folder */}
               <div className="flex items-center gap-2">
+                {/* Task Completion Checkbox */}
                 <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-600" />
                 
-                {/* Folder Dropdown */}
+                {/* Folder Selector */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-1 text-sm text-gray-300 hover:text-gray-100 transition-colors">
@@ -138,7 +140,7 @@ const hello = "world";
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Status Dropdown */}
+                {/* Status Selector */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-1 px-3 py-1 rounded-full bg-gray-700 text-gray-300 text-sm hover:bg-gray-600 transition-colors">
@@ -160,7 +162,7 @@ const hello = "world";
                 </DropdownMenu>
               </div>
 
-              {/* Tags */}
+              {/* Tags Section: Display and manage note tags */}
               <div className="flex items-center gap-2 flex-wrap">
                 {tags.map((tag) => (
                   <span
@@ -179,7 +181,7 @@ const hello = "world";
                   </span>
                 ))}
 
-                {/* Add Tag */}
+                {/* Add New Tag Input */}
                 {showTagInput ? (
                   <div className="flex items-center gap-1">
                     <input
