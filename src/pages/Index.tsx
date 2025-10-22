@@ -2,7 +2,13 @@ import { Sidebar } from "@/components/sidebar";
 import { useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Eye, Columns2, Hash, Bold, Italic, Strikethrough, Link, List, ListOrdered, CheckSquare, Quote, Code, Code2, Minus, Image } from "lucide-react";
+import { Eye, Columns2, Hash, Bold, Italic, Strikethrough, Link, List, ListOrdered, CheckSquare, Quote, Code, Code2, Minus, Image, ChevronDown, X, Plus } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type ViewMode = "edit" | "preview" | "split";
 
@@ -25,7 +31,40 @@ const hello = "world";
 - List item 2
 `);
   const [viewMode, setViewMode] = useState<ViewMode>("edit");
+  const [selectedFolder, setSelectedFolder] = useState("Awesome SaaS : Mobile app");
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>(["React Native", "Database"]);
+  const [newTag, setNewTag] = useState("");
+  const [showTagInput, setShowTagInput] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const folders = [
+    "Awesome SaaS : Mobile app",
+    "Personal Projects",
+    "Work Notes",
+    "Learning",
+  ];
+
+  const statuses = ["Active", "On Hold", "Completed", "Archived"];
+
+  const tagColors: { [key: string]: string } = {
+    "React Native": "bg-gray-700 text-gray-200",
+    "Database": "bg-amber-600 text-white",
+    "TypeScript": "bg-blue-600 text-white",
+    "UI/UX": "bg-purple-600 text-white",
+  };
+
+  const addTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag("");
+      setShowTagInput(false);
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const insertMarkdown = (before: string, after: string = "") => {
     const textarea = textareaRef.current;
@@ -70,8 +109,114 @@ const hello = "world";
             <input
               type="text"
               placeholder="Note title..."
-              className="w-full bg-transparent text-xl font-semibold text-gray-200 outline-none placeholder-gray-600"
+              className="w-full bg-transparent text-xl font-semibold text-gray-200 outline-none placeholder-gray-600 mb-3"
             />
+            
+            {/* Folder, Status, and Tags */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-600" />
+                
+                {/* Folder Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-1 text-sm text-gray-300 hover:text-gray-100 transition-colors">
+                      {selectedFolder}
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-[#2a2d31] border-gray-700 z-50">
+                    {folders.map((folder) => (
+                      <DropdownMenuItem
+                        key={folder}
+                        onClick={() => setSelectedFolder(folder)}
+                        className="text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer"
+                      >
+                        {folder}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Status Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-1 px-3 py-1 rounded-full bg-gray-700 text-gray-300 text-sm hover:bg-gray-600 transition-colors">
+                      {selectedStatus || "Status"}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-[#2a2d31] border-gray-700 z-50">
+                    {statuses.map((status) => (
+                      <DropdownMenuItem
+                        key={status}
+                        onClick={() => setSelectedStatus(status)}
+                        className="text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer"
+                      >
+                        {status}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Tags */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                      tagColors[tag] || "bg-gray-700 text-gray-200"
+                    }`}
+                  >
+                    {tag}
+                    <button
+                      onClick={() => removeTag(tag)}
+                      className="hover:opacity-70 transition-opacity"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+
+                {/* Add Tag */}
+                {showTagInput ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="text"
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && addTag()}
+                      placeholder="Tag name..."
+                      className="px-2 py-1 bg-gray-800 text-gray-300 text-sm rounded border border-gray-600 outline-none focus:border-gray-500"
+                      autoFocus
+                    />
+                    <button
+                      onClick={addTag}
+                      className="p-1 text-green-500 hover:text-green-400"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowTagInput(false);
+                        setNewTag("");
+                      }}
+                      className="p-1 text-gray-500 hover:text-gray-400"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowTagInput(true)}
+                    className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+                  >
+                    Add Tags
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
           
           {/* Markdown Toolbar */}
