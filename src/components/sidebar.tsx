@@ -14,6 +14,7 @@ import {
   CheckCircle,
   XCircle,
   User,
+  FolderOpen,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -24,16 +25,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
   const [isStatusOpen, setIsStatusOpen] = useState(true);
   const [isTagsOpen, setIsTagsOpen] = useState(true);
   const [isNotebooksOpen, setIsNotebooksOpen] = useState(true);
+  const [vaultName, setVaultName] = useState<string>('My Vault');
+
+  const handleOpenVault = () => {
+    // Simulate opening a vault from localStorage
+    const storedVault = localStorage.getItem('vault_name');
+    if (storedVault) {
+      setVaultName(storedVault);
+    } else {
+      const newVaultName = 'My Vault';
+      localStorage.setItem('vault_name', newVaultName);
+      setVaultName(newVaultName);
+    }
+  };
 
   return (
     <div className={`flex flex-col h-screen w-64 bg-[#1f2326] border-r border-[#2d3236] ${className}`}>
-      {/* macOS Window Controls & Settings */}
+      {/* Open Vault & Settings */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#2d3236]">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F57]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#28CA42]"></div>
-        </div>
+        <button 
+          onClick={handleOpenVault}
+          className="flex items-center gap-2 text-gray-400 hover:text-gray-200 transition-colors px-3 py-1.5 rounded hover:bg-[#282c30]"
+        >
+          <FolderOpen className="w-4 h-4" />
+          <span className="text-sm font-medium">Open Vault</span>
+        </button>
         <button className="text-gray-400 hover:text-gray-200 transition-colors">
           <Settings className="w-5 h-5" />
         </button>
@@ -78,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
               <button className="w-full flex items-center justify-between pl-8 pr-4 py-2 text-gray-400 hover:bg-[#282c30] hover:text-gray-200 transition-colors group">
                 <div className="flex items-center gap-3">
                   <BookOpen className="w-4 h-4" />
-                  <span className="text-sm">First Notebook</span>
+                  <span className="text-sm">{vaultName}</span>
                 </div>
                 <span className="text-xs text-gray-500 group-hover:text-gray-400">2</span>
               </button>
